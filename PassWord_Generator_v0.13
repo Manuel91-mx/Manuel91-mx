@@ -1,0 +1,119 @@
+import string
+from random import randint
+import math
+
+
+def algorith():
+    pi = math.pi
+    random_numbers = (randint(1, 4) * pi / math.factorial(randint(1, 4))) * randint(1, 10)
+    return int(round(random_numbers, 0))
+
+
+def random_key():
+    number_count = int(input("How many characters are your password?: "))
+    key_log = []
+    for i in range(0, number_count):
+        key = algorith()
+        while key in key_log:
+            key = algorith()
+        key_log.append(key)
+    return key_log
+
+
+def load_character():
+    letters_upper = []
+    letters_lower = []
+    symbols = []
+    numbers_ = []
+
+    for i in string.ascii_uppercase:
+        letters_upper.append(i)
+
+    for i in string.ascii_lowercase:
+        letters_lower.append(i)
+
+    for i in string.punctuation:
+        symbols.append(i)
+
+    for i in string.digits:
+        numbers_.append(i)
+
+    return letters_upper, letters_lower, symbols, numbers_
+
+
+def uppercase_authenticator(var1):
+    uppercase, lowercase, _, _ = load_character()
+    upper = False
+    var_password = int(len(var1))
+    for i in uppercase:
+        if i in var1:
+            upper = True
+            break
+
+    if upper is False:
+        for i in range(0, var_password):
+            if var1[i] in lowercase:
+                upper_letter = var1[i]
+                upper_letter = upper_letter.upper()
+                var1[i] = upper_letter
+                break
+
+
+def select_special_characters():
+    upper_letter, lower_letter, _, number_letters = load_character()
+
+    special_characters = []
+
+    characters = input("What characters do you want?: ")
+
+    for i in characters:
+        special_characters.append(i)
+
+    return upper_letter, lower_letter, special_characters, number_letters
+
+
+def password_generator(var1, var2, var3, var4, var5):
+    password = []
+    upper_letters = int(len(var1))
+    lower_letters = int(len(var2))
+    symbol_letters = int(len(var3))
+    number_letters = int(len(var4))
+    key_length = int(len(var5))
+
+    for i in range(0, key_length):
+        if 64 <= var5[i] <= 79 or 32 <= var5[i] <= 47:
+            password.append(var4[randint(0, number_letters - 1)])
+
+        elif 96 <= var5[i] <= 111 or 48 <= var5[i] <= 63:
+            password.append(var1[randint(0, upper_letters - 1)])
+
+        elif 0 <= var5[i] <= 15 or 80 <= var5[i] <= 95:
+            password.append(var2[randint(0, lower_letters - 1)])
+
+        elif 16 <= var5[i] <= 31 or 112 <= var5[i] <= 127:
+            password.append(var3[randint(0, symbol_letters - 1)])
+    return password
+
+
+def main():
+    key = random_key()
+
+    if input("Do you want to use all the special characters (y/n)?: ") == "y":
+        letters_uppercase, letters_lowercase, symbols_, numbers_ = load_character()
+        password = password_generator(letters_uppercase, letters_lowercase, symbols_, numbers_, key)
+    else:
+        letters_uppercase, letters_lowercase, symbols_, numbers_ = select_special_characters()
+        password = password_generator(letters_uppercase, letters_lowercase, symbols_, numbers_, key)
+
+    #  ejemplo para truiquear el comando if para las minusculas y hacerlas mayusculas.
+    #password = ["=", "j", "y", "4", "+", "!", "t", "2", "2", "x", "}", "o", "a", "'", "q", "m"]
+
+    uppercase_authenticator(password)
+
+    password_generated = "".join(password)
+
+    print(f"Password generated: {password_generated}")
+
+
+if __name__ == "__main__":
+    main()
